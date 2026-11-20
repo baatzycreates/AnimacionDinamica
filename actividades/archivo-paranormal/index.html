@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Archivo Paranormal</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            min-height: 100vh;
+            background: #100d1c;
+            color: #f4edff;
+            font-family: Verdana, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #c7a5ff;
+            letter-spacing: 3px;
+        }
+
+        .subtitulo {
+            color: #aaa0bd;
+        }
+
+        .contenedor {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #211a32;
+            border: 2px solid #7455a8;
+            border-radius: 18px;
+        }
+
+        img {
+            width: 250px;
+            max-width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 15px;
+            background: #171124;
+        }
+
+        h2 {
+            color: #d8c2ff;
+            margin-bottom: 10px;
+        }
+
+        #descripcion {
+            color: #c2b8d4;
+            line-height: 1.6;
+        }
+
+        .teclas {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tecla {
+            background: #7455a8;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .instruccion {
+            margin-top: 25px;
+            color: #b9a6d6;
+            font-size: 14px;
+        }
+
+        #numero {
+            color: #c7a5ff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>ARCHIVO PARANORMAL</h1>
+    <p class="subtitulo">Una colección de criaturas misteriosas...</p>
+
+    <div class="contenedor">
+
+        <p>EXPEDIENTE <span id="numero">01</span></p>
+
+        <img id="imagen" src="" alt="Ilustración de una criatura">
+
+        <h2 id="nombre">La Sombra</h2>
+
+        <p id="descripcion">
+            Una presencia misteriosa que aparece durante la noche.
+        </p>
+
+        <div class="teclas">
+            <span class="tecla">1</span>
+            <span class="tecla">2</span>
+            <span class="tecla">3</span>
+            <span class="tecla">4</span>
+            <span class="tecla">5</span>
+        </div>
+
+        <p class="instruccion">
+            Presiona una tecla del 1 al 5 para descubrir otra criatura.
+        </p>
+
+    </div>
+
+    <script>
+
+        // Crear ilustraciones SVG para cada criatura
+        function crearImagen(color, simbolo) {
+
+            var svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
+                    <rect width="300" height="300" rx="25" fill="#171124"/>
+                    <circle cx="150" cy="145" r="105"
+                        fill="${color}" opacity="0.15"/>
+                    <circle cx="150" cy="145" r="75"
+                        fill="none" stroke="${color}" stroke-width="3"/>
+                    <path d="M150 45 L165 100 L220 120 L175 155
+                        L185 220 L150 185 L115 220 L125 155
+                        L80 120 L135 100 Z"
+                        fill="${color}" opacity="0.8"/>
+                    <text x="150" y="165" text-anchor="middle"
+                        font-size="75" fill="white">${simbolo}</text>
+                    <text x="150" y="270" text-anchor="middle"
+                        font-size="14" fill="${color}"
+                        font-family="Verdana">EXPEDIENTE CLASIFICADO</text>
+                </svg>
+            `;
+
+            return "data:image/svg+xml;charset=utf-8," +
+                encodeURIComponent(svg);
+        }
+
+        // Información de las cinco criaturas
+        var criaturas = {
+
+            "1": {
+                nombre: "La Sombra",
+                descripcion: "Una presencia que se esconde en los rincones oscuros. Nadie sabe cuándo aparece, pero siempre está observando.",
+                color: "#9b72cf",
+                simbolo: "☾"
+            },
+
+            "2": {
+                nombre: "El Guardián",
+                descripcion: "Una criatura antigua que protege lugares abandonados. Se dice que sus ojos pueden ver el pasado.",
+                color: "#55c7c0",
+                simbolo: "✦"
+            },
+
+            "3": {
+                nombre: "El Espectro",
+                descripcion: "Un espíritu que atraviesa las paredes y desaparece cuando alguien intenta acercarse.",
+                color: "#8da9ff",
+                simbolo: "◇"
+            },
+
+            "4": {
+                nombre: "La Bruja Carmesí",
+                descripcion: "Una figura misteriosa relacionada con antiguos hechizos. Su presencia anuncia que algo extraño está por suceder.",
+                color: "#ed7198",
+                simbolo: "✧"
+            },
+
+            "5": {
+                nombre: "El Ser Desconocido",
+                descripcion: "Nadie ha logrado identificar esta criatura. Su expediente sigue abierto y su origen es un misterio.",
+                color: "#d9b45b",
+                simbolo: "?"
+            }
+
+        };
+
+        // Cambiar texto e imagen
+        function mostrarCriatura(tecla) {
+
+            var criatura = criaturas[tecla];
+
+            if (!criatura) {
+                return;
+            }
+
+            document.getElementById("nombre").textContent =
+                criatura.nombre;
+
+            document.getElementById("descripcion").textContent =
+                criatura.descripcion;
+
+            document.getElementById("numero").textContent =
+                "0" + tecla;
+
+            document.getElementById("imagen").src =
+                crearImagen(criatura.color, criatura.simbolo);
+        }
+
+        // Detectar las teclas presionadas
+        window.addEventListener("keydown", function(event) {
+
+            mostrarCriatura(event.key);
+
+        });
+
+        // Mostrar la primera criatura al abrir la página
+        mostrarCriatura("1");
+
+    </script>
+
+</body>
+</html>
