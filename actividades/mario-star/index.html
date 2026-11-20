@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mario Star!</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 22px 12px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+      background: #fff1a8; color: #57320b; font-family: Arial, Helvetica, sans-serif;
+    }
+    h1 { margin: 0; color: #e99b00; font-size: clamp(28px, 5vw, 48px); font-weight: 900; letter-spacing: 2px; text-shadow: 2px 3px #fff; text-align: center; }
+    p { margin: 0; text-align: center; font-weight: bold; }
+    canvas {
+      display: block; width: min(90vw,  min(760px, 72vh)); height: auto;
+      aspect-ratio: 1 / 1; border: 5px solid #30251d;
+      box-shadow: 0 10px 24px rgba(70,48,12,.25); background: #75d5e8;
+    }
+    #estado { max-width: 760px; color: #6d2800; font-size: 14px; font-weight: normal; }
+  </style>
+</head>
+<body>
+  <h1>★ MARIO STAR! ★</h1>
+  <p>¡Una estrella en movimiento!</p>
+  <canvas id="escenario" width="980" height="980"></canvas>
+  <p id="estado">Cargando imágenes...</p>
+
+  <script>
+    const canvas = document.getElementById('escenario');
+    const ctx = canvas.getContext('2d');
+    const estado = document.getElementById('estado');
+
+    const fondo = new Image();
+    const estrella = new Image();
+    fondo.src = './mariobackground.jpg';
+    estrella.src = './star.png';
+
+    const actor = {
+      x: 120, baseY: 440, velocidad: 190, direccion: 1,
+      tamano: 145, angulo: 0, tiempo: 0
+    };
+    let ultimoTiempo = 0;
+
+    function dibujarFondo() {
+      ctx.drawImage(fondo, 0, 0, canvas.width, canvas.height);
+    }
+
+    function dibujarEstrella() {
+      const flotacion = Math.sin(actor.tiempo * 2.4) * 48;
+      const pulso = 1 + Math.sin(actor.tiempo * 3.2) * 0.07;
+      ctx.save();
+      ctx.translate(actor.x, actor.baseY + flotacion);
+      ctx.rotate(actor.angulo);
+      ctx.scale(pulso, pulso);
+      ctx.shadowColor = 'rgba(255, 220, 30, 0.95)';
+      ctx.shadowBlur = 28;
+      ctx.drawImage(estrella, -actor.tamano / 2, -actor.tamano / 2, actor.tamano, actor.tamano);
+      ctx.restore();
+    }
+
+    function animar(tiempoActual) {
+      requestAnimationFrame(animar);
+      const delta = ultimoTiempo === 0 ? 0 : Math.min((tiempoActual - ultimoTiempo) / 1000, 0.04);
+      ultimoTiempo = tiempoActual;
+      actor.tiempo += delta;
+      actor.x += actor.velocidad * actor.direccion * delta;
+      actor.angulo += delta * 1.15;
+
+      const limite = actor.tamano / 2 + 28;
+      if (actor.x >= canvas.width - limite) {
+        actor.x = canvas.width - limite;
+        actor.direccion = -1;
+      } else if (actor.x <= limite) {
+        actor.x = limite;
+        actor.direccion = 1;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      dibujarFondo();
+      dibujarEstrella();
+    }
+
+    let cargadas = 0;
+    function imagenLista() {
+      cargadas++;
+      if (cargadas === 2) {
+        estado.textContent = 'Que bonita estrella.';
+        requestAnimationFrame(animar);
+      }
+    }
+    function errorImagen(nombre) {
+      estado.textContent = 'No se encontró ' + nombre + '. Revisa que los 3 archivos estén juntos en la carpeta mario-star.';
+      console.error('No se pudo cargar: ' + nombre);
+    }
+    fondo.onload = imagenLista;
+    estrella.onload = imagenLista;
+    fondo.onerror = () => errorImagen('mariobackground.jpg');
+    estrella.onerror = () => errorImagen('star.png');
+  </script>
+</body>
+</html>
