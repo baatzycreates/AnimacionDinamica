@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Momonga - Reto Canvas</title>
+
+    <style>
+        body {
+            background-color: rgb(174, 226, 228);
+            text-align: center;
+            font-family: Verdana, sans-serif;
+        }
+
+        h1 {
+            color: #333366;
+        }
+
+        canvas {
+            border: 2px solid #5e5e5e;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>¡Momonga en movimiento!</h1>
+    <p>Reto de animación en Canvas</p>
+
+    <canvas id="micanvas" width="800" height="600"></canvas>
+
+    <script>
+        window.onload = function () {
+
+            var canvas = document.getElementById("micanvas");
+            var context = canvas.getContext("2d");
+
+            // Posición inicial
+            var x = 200;
+            var y = 200;
+
+            // Velocidad en ambos ejes
+            var dx = 3;
+            var dy = 2;
+
+            // Tamaño de Momonga
+            var ancho = 120;
+            var alto = 120;
+
+            // Cargar imagen
+            var imagen = new Image();
+            imagen.src = "momongii.jpg";
+
+            function animate() {
+
+                requestAnimationFrame(animate);
+
+                // Limpiar el canvas
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Dibujar Momonga
+                context.drawImage(imagen, x, y, ancho, alto);
+
+                // Rebote horizontal
+                if (x + ancho >= canvas.width || x <= 0) {
+                    dx = -dx;
+                }
+
+                // Rebote vertical
+                if (y + alto >= canvas.height || y <= 0) {
+                    dy = -dy;
+                }
+
+                // Actualizar posición
+                x += dx;
+                y += dy;
+            }
+
+            // Iniciar animación cuando cargue la imagen
+            imagen.onload = function () {
+                animate();
+            };
+
+        };
+    </script>
+
+</body>
+</html>
