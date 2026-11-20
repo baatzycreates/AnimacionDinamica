@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Arte en Canvas</title>
+
+    <style>
+        body {
+            background-color: #f2e9dc;
+            text-align: center;
+            font-family: Verdana, sans-serif;
+        }
+
+        h1 {
+            color: #354259;
+        }
+
+        canvas {
+            border: 3px solid #354259;
+            background-color: #fff8ed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Arte geométrico</h1>
+    <p>Una composición hecha únicamente con cuadrados y rectángulos.</p>
+
+    <canvas id="micanvas" width="800" height="600"></canvas>
+
+    <script>
+        window.onload = function () {
+
+            var canvas = document.getElementById("micanvas");
+            var context = canvas.getContext("2d");
+
+            // Posición de las figuras animadas
+            var x = 350;
+            var y = 250;
+            var dx = 3;
+            var dy = 2;
+
+            function animate() {
+
+                requestAnimationFrame(animate);
+
+                // Limpiar canvas
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Fondo
+                context.fillStyle = "#fff8ed";
+                context.fillRect(0, 0, 800, 600);
+
+                // Cuadrados y rectángulos decorativos
+                context.fillStyle = "#354259";
+                context.fillRect(40, 40, 180, 120);
+
+                context.fillStyle = "#f4a261";
+                context.fillRect(240, 40, 100, 180);
+
+                context.fillStyle = "#e76f51";
+                context.fillRect(360, 40, 180, 80);
+
+                context.fillStyle = "#2a9d8f";
+                context.fillRect(560, 40, 200, 150);
+
+                context.fillStyle = "#e9c46a";
+                context.fillRect(40, 180, 100, 180);
+
+                context.fillStyle = "#9b5de5";
+                context.fillRect(160, 240, 180, 120);
+
+                context.fillStyle = "#354259";
+                context.fillRect(560, 220, 200, 100);
+
+                context.fillStyle = "#f4a261";
+                context.fillRect(40, 390, 180, 150);
+
+                context.fillStyle = "#2a9d8f";
+                context.fillRect(240, 400, 100, 140);
+
+                context.fillStyle = "#e76f51";
+                context.fillRect(560, 350, 200, 190);
+
+                // Figuras animadas
+                context.fillStyle = "#9b5de5";
+                context.fillRect(x, y, 60, 60);
+
+                context.fillStyle = "#e9c46a";
+                context.fillRect(x + 70, y + 20, 35, 35);
+
+                // Movimiento horizontal
+                if (x + 105 >= 540 || x <= 350) {
+                    dx = -dx;
+                }
+
+                // Movimiento vertical
+                if (y + 60 >= 380 || y <= 230) {
+                    dy = -dy;
+                }
+
+                x += dx;
+                y += dy;
+
+            }
+
+            animate();
+
+        };
+    </script>
+
+</body>
+</html>
