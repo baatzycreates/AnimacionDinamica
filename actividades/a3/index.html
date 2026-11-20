@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Globes 2019</title>
+
+    <style>
+        body {
+            background-color: #111111;
+            color: white;
+            font-family: Georgia, serif;
+            text-align: center;
+            margin: 0;
+        }
+
+        header {
+            background-color: #b08d3c;
+            color: black;
+            padding: 35px;
+        }
+
+        h1 {
+            font-size: 45px;
+            letter-spacing: 5px;
+        }
+
+        main {
+            padding: 35px;
+        }
+
+        .categoria {
+            border: 1px solid #b08d3c;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 550px;
+        }
+
+        h2 {
+            color: #d8b65c;
+        }
+
+        .ganador {
+            font-size: 25px;
+            color: #d8b65c;
+        }
+
+        footer {
+            padding: 20px;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>GOLDEN GLOBES</h1>
+        <p>76th Annual Golden Globe Awards</p>
+        <p>2019</p>
+    </header>
+
+    <main>
+
+        <h2>And the winner is...</h2>
+
+        <section class="categoria">
+            <h2>Best Actor in a Motion Picture - Drama</h2>
+            <p class="ganador" id="bestactor">Nombre del actor</p>
+            <p>Bohemian Rhapsody</p>
+        </section>
+
+        <section class="categoria">
+            <h2>Best Motion Picture - Drama</h2>
+            <p>Bohemian Rhapsody</p>
+        </section>
+
+        <section class="categoria">
+            <h2>Best Original Song</h2>
+            <p>Shallow - A Star Is Born</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Golden Globes 2019 | Awards & Winners</p>
+    </footer>
+
+    <script>
+        function init() {
+
+            var nombreactor = document.getElementById("bestactor");
+
+            nombreactor.innerHTML = "Rami Malek";
+
+        }
+
+        window.onload = init;
+    </script>
+
+</body>
+</html>
