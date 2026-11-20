@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animación Senoidal</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #171329;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #d6a8ff;
+            letter-spacing: 3px;
+        }
+
+        canvas {
+            background: #241b3d;
+            border: 2px solid #a875e8;
+            border-radius: 15px;
+            max-width: 95%;
+        }
+
+        p {
+            color: #d8c8ed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>ONDA SENOIDAL</h1>
+    <p>Una esfera que flota y cambia de tamaño ✦</p>
+
+    <canvas id="canvas" width="800" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+
+        let angle = 0;
+
+        function drawFrame() {
+            requestAnimationFrame(drawFrame);
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Fondo
+            context.fillStyle = "#241b3d";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Estrellas
+            context.fillStyle = "#ffffff";
+
+            for (let i = 0; i < 35; i++) {
+                let x = (i * 137) % canvas.width;
+                let y = (i * 83) % canvas.height;
+
+                context.beginPath();
+                context.arc(x, y, 2, 0, Math.PI * 2);
+                context.fill();
+            }
+
+            // Propiedad 1: posición vertical con onda coseno
+            let posicionY = 250 + Math.cos(angle) * 90;
+
+            // Propiedad 2: escala con onda senoidal
+            let escala = 1 + Math.sin(angle) * 0.35;
+
+            // Dibujar esfera
+            context.save();
+
+            context.translate(400, posicionY);
+            context.scale(escala, escala);
+
+            // Brillo exterior
+            context.shadowColor = "#c58aff";
+            context.shadowBlur = 35;
+
+            let gradient = context.createRadialGradient(
+                -15, -20, 5,
+                0, 0, 75
+            );
+
+            gradient.addColorStop(0, "#ffffff");
+            gradient.addColorStop(0.3, "#d6a8ff");
+            gradient.addColorStop(1, "#783fbd");
+
+            context.fillStyle = gradient;
+
+            context.beginPath();
+            context.arc(0, 0, 65, 0, Math.PI * 2);
+            context.fill();
+
+            context.restore();
+
+            // Avanzar el ángulo
+            angle += 0.035;
+        }
+
+        drawFrame();
+    </script>
+
+</body>
+</html>
