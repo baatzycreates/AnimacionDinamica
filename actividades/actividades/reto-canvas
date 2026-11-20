@@ -50,7 +50,7 @@
 
             // Cargar imagen
             var imagen = new Image();
-            imagen.src = "momongii.jpg";
+            imagen.src = "momongaa.png";
 
             function animate() {
 
