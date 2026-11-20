@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rotación al Mouse</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #151225;
+            color: #eee5ff;
+            font-family: Verdana, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #c7a5ff;
+            letter-spacing: 2px;
+        }
+
+        p {
+            color: #b9accf;
+        }
+
+        canvas {
+            width: 800px;
+            max-width: 95vw;
+            height: auto;
+            border: 2px solid #8062b5;
+            border-radius: 12px;
+            background: #211b35;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>ROTACIÓN AL MOUSE</h1>
+    <p>Mueve el cursor dentro del canvas y observa cómo gira la flecha.</p>
+
+    <canvas id="canvas" width="800" height="550"></canvas>
+
+    <script>
+
+        window.onload = function () {
+
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+
+            var mouse = {
+                x: canvas.width / 2,
+                y: canvas.height / 2
+            };
+
+            // Detectar la posición del mouse
+            canvas.addEventListener("mousemove", function(event) {
+
+                var rect = canvas.getBoundingClientRect();
+
+                mouse.x = (event.clientX - rect.left) *
+                    (canvas.width / rect.width);
+
+                mouse.y = (event.clientY - rect.top) *
+                    (canvas.height / rect.height);
+
+            });
+
+            function drawArrow() {
+
+                var x = canvas.width / 2;
+                var y = canvas.height / 2;
+
+                // Calcular distancia hacia el mouse
+                var dx = mouse.x - x;
+                var dy = mouse.y - y;
+
+                // Calcular el ángulo con atan2
+                var radianes = Math.atan2(dy, dx);
+
+                context.save();
+
+                // Mover el origen al centro
+                context.translate(x, y);
+
+                // Girar según el mouse
+                context.rotate(radianes);
+
+                // Dibujar la flecha
+                context.fillStyle = "#b58aff";
+                context.strokeStyle = "#eee0ff";
+                context.lineWidth = 3;
+
+                context.beginPath();
+                context.moveTo(65, 0);
+                context.lineTo(15, -28);
+                context.lineTo(25, -10);
+                context.lineTo(-55, -10);
+                context.lineTo(-55, 10);
+                context.lineTo(25, 10);
+                context.lineTo(15, 28);
+                context.closePath();
+
+                context.fill();
+                context.stroke();
+
+                context.restore();
+            }
+
+            // Crear estrellas decorativas
+            function drawStars() {
+
+                context.fillStyle = "#ffffff";
+
+                var stars = [
+                    [80, 90], [180, 180], [650, 100],
+                    [720, 260], [100, 420], [600, 450],
+                    [350, 80], [450, 480], [740, 60]
+                ];
+
+                stars.forEach(function(star) {
+                    context.beginPath();
+                    context.arc(star[0], star[1], 2, 0, Math.PI * 2);
+                    context.fill();
+                });
+            }
+
+            function animate() {
+
+                requestAnimationFrame(animate);
+
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                drawStars();
+
+                drawArrow();
+
+            }
+
+            animate();
+
+        };
+
+    </script>
+
+</body>
+</html>
