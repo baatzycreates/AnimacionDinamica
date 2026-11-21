@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Figuras - Canvas</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px 10px;
+            background: #171329;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            color: #d9b5ff;
+            letter-spacing: 3px;
+        }
+
+        p {
+            color: #c9b8dc;
+        }
+
+        canvas {
+            display: block;
+            margin: 25px auto;
+            max-width: 100%;
+            height: auto;
+            background: #fff9f0;
+            border: 4px solid #a875e8;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>GALERÍA DE FIGURAS</h1>
+    <p>Dibujos realizados con Canvas API ✦</p>
+
+    <canvas id="canvas" width="1000" height="800"></canvas>
+
+    <script>
+        window.onload = function () {
+
+            const canvas = document.getElementById("canvas");
+            const context = canvas.getContext("2d");
+
+            // Fondo
+            context.fillStyle = "#fff9f0";
+            context.fillRect(0, 0, 1000, 800);
+
+            // Título dentro del canvas
+            context.fillStyle = "#4b326c";
+            context.font = "bold 30px Arial";
+            context.textAlign = "center";
+            context.fillText("MI MUNDO DE FIGURAS", 500, 55);
+
+            // Función para escribir nombres
+            function etiqueta(texto, x, y) {
+                context.fillStyle = "#563b75";
+                context.font = "bold 19px Arial";
+                context.textAlign = "center";
+                context.fillText(texto, x, y);
+            }
+
+            // =================================
+            // 1. CASITA
+            // =================================
+
+            context.save();
+
+            // Techo
+            context.beginPath();
+            context.moveTo(90, 210);
+            context.lineTo(175, 130);
+            context.lineTo(260, 210);
+            context.closePath();
+
+            const techo = context.createLinearGradient(90, 130, 260, 220);
+            techo.addColorStop(0, "#ff8c9d");
+            techo.addColorStop(1, "#bd4f83");
+
+            context.fillStyle = techo;
+            context.fill();
+            context.lineWidth = 5;
+            context.strokeStyle = "#70446e";
+            context.stroke();
+
+            // Paredes
+            context.fillStyle = "#ffd6a5";
+            context.fillRect(110, 210, 130, 120);
+            context.strokeRect(110, 210, 130, 120);
+
+            // Puerta
+            context.fillStyle = "#9c6644";
+            context.fillRect(160, 260, 45, 70);
+
+            // Ventana
+            context.fillStyle = "#8ed8ed";
+            context.fillRect(120, 235, 30, 30);
+            context.strokeRect(120, 235, 30, 30);
+
+            context.beginPath();
+            context.moveTo(135, 235);
+            context.lineTo(135, 265);
+            context.moveTo(120, 250);
+            context.lineTo(150, 250);
+            context.stroke();
+
+            // Chimenea
+            context.fillStyle = "#bd4f83";
+            context.fillRect(210, 150, 25, 50);
+
+            context.restore();
+
+            etiqueta("CASITA", 175, 375);
+
+
+            // =================================
+            // 2. HONGUITO
+            // =================================
+
+            context.save();
+
+            // Tallo
+            context.fillStyle = "#ffe0b2";
+            context.beginPath();
+            context.roundRect(390, 230, 75, 105, 20);
+            context.fill();
+            context.strokeStyle = "#805b50";
+            context.lineWidth = 4;
+            context.stroke();
+
+            // Sombrero
+            context.beginPath();
+            context.moveTo(360, 240);
+            context.bezierCurveTo(360, 130, 495, 130, 495, 240);
+            context.closePath();
+
+            const hongo = context.createLinearGradient(370, 140, 480, 250);
+            hongo.addColorStop(0, "#ff647c");
+            hongo.addColorStop(1, "#b92755");
+
+            context.fillStyle = hongo;
+            context.fill();
+            context.stroke();
+
+            // Manchitas
+            context.fillStyle = "#fff5e9";
+
+            context.beginPath();
+            context.arc(405, 190, 17, 0, Math.PI * 2);
+            context.arc(455, 175, 14, 0, Math.PI * 2);
+            context.arc(465, 220, 10, 0, Math.PI * 2);
+            context.fill();
+
+            // Ojos
+            context.fillStyle = "#35283d";
+            context.beginPath();
+            context.arc(410, 275, 5, 0, Math.PI * 2);
+            context.arc(445, 275, 5, 0, Math.PI * 2);
+            context.fill();
+
+            context.restore();
+
+            etiqueta("HONGUITO", 425, 375);
+
+
+            // =================================
+            // 3. ESTRELLA
+            // =================================
+
+            context.save();
+
+            function dibujarEstrella(x, y, radioExterior, radioInterior) {
+                context.beginPath();
+
+                for (let i = 0; i < 10; i++) {
+                    const radio = i % 2 === 0
+                        ? radioExterior
+                        : radioInterior;
+
+                    const angulo = -Math.PI / 2 + i * Math.PI / 5;
+
+                    const px = x + Math.cos(angulo) * radio;
+                    const py = y + Math.sin(angulo) * radio;
+
+                    if (i === 0) {
+                        context.moveTo(px, py);
+                    } else {
+                        context.lineTo(px, py);
+                    }
+                }
+
+                context.closePath();
+            }
+
+            dibujarEstrella(700, 220, 90, 40);
+
+            const estrella = context.createLinearGradient(620, 130, 780, 300);
+            estrella.addColorStop(0, "#fff58a");
+            estrella.addColorStop(0.5, "#ffc247");
+            estrella.addColorStop(1, "#f28b30");
+
+            context.fillStyle = estrella;
+            context.fill();
+            context.lineWidth = 5;
+            context.strokeStyle = "#b76b35";
+            context.stroke();
+
+            // Brillito
+            context.fillStyle = "white";
+            context.beginPath();
+            context.arc(675, 180, 10, 0, Math.PI * 2);
+            context.fill();
+
+            context.restore();
+
+            etiqueta("ESTRELLA", 700, 375);
+
+
+            // =================================
+            // 4. LUNA
+            // =================================
+
+            context.save();
+
+            context.beginPath();
+            context.arc(170, 510, 75, 0, Math.PI * 2);
+
+            const luna = context.createLinearGradient(100, 430, 240, 580);
+            luna.addColorStop(0, "#c5b5ff");
+            luna.addColorStop(1, "#8065cf");
+
+            context.fillStyle = luna;
+            context.fill();
+
+            // Círculo que crea la forma de luna creciente
+            context.globalCompositeOperation = "destination-out";
+            context.beginPath();
+            context.arc(210, 475, 68, 0, Math.PI * 2);
+            context.fill();
+
+            context.globalCompositeOperation = "source-over";
+
+            // Estrellas pequeñas
+            context.fillStyle = "#f6c95c";
+
+            context.beginPath();
+            context.arc(105, 420, 6, 0, Math.PI * 2);
+            context.arc(250, 530, 5, 0, Math.PI * 2);
+            context.fill();
+
+            context.restore();
+
+            etiqueta("LUNA", 175, 640);
+
+
+            // =================================
+            // 5. FIGURA LIBRE: CORAZÓN
+            // =================================
+
+            context.save();
+
+            context.beginPath();
+            context.moveTo(480, 550);
+
+            context.bezierCurveTo(390, 480, 400, 420, 460, 420);
+            context.bezierCurveTo(490, 420, 505, 445, 510, 455);
+            context.bezierCurveTo(515, 445, 540, 420, 570, 420);
+            context.bezierCurveTo(630, 420, 630, 480, 540, 550);
+
+            context.closePath();
+
+            const corazon = context.createLinearGradient(430, 420, 570, 560);
+            corazon.addColorStop(0, "#ff9bb5");
+            corazon.addColorStop(1, "#e33d83");
+
+            context.fillStyle = corazon;
+            context.fill();
+
+            context.lineWidth = 5;
+            context.strokeStyle = "#963e70";
+            context.stroke();
+
+            context.restore();
+
+            etiqueta("CORAZÓN", 510, 640);
+
+
+            // =================================
+            // 6. ZORRITO CETYS - EXTRA
+            // =================================
+
+            context.save();
+
+            // Oreja izquierda
+            context.fillStyle = "#d96b32";
+            context.beginPath();
+            context.moveTo(740, 490);
+            context.lineTo(750, 405);
+            context.lineTo(810, 455);
+            context.closePath();
+            context.fill();
+            context.strokeStyle = "#713d35";
+            context.lineWidth = 5;
+            context.stroke();
+
+            // Oreja derecha
+            context.beginPath();
+            context.moveTo(850, 455);
+            context.lineTo(910, 405);
+            context.lineTo(920, 490);
+            context.closePath();
+            context.fill();
+            context.stroke();
+
+            // Interior de orejas
+            context.fillStyle = "#ffd0b0";
+            context.beginPath();
+            context.moveTo(762, 460);
+            context.lineTo(755, 430);
+            context.lineTo(790, 460);
+            context.closePath();
+            context.fill();
+
+            context.beginPath();
+            context.moveTo(870, 460);
+            context.lineTo(905, 430);
+            context.lineTo(898, 460);
+            context.closePath();
+            context.fill();
+
+            // Cabeza
+            context.fillStyle = "#e77a36";
+            context.beginPath();
+            context.ellipse(830, 500, 88, 80, 0, 0, Math.PI * 2);
+            context.fill();
+            context.stroke();
+
+            // Mejillas blancas
+            context.fillStyle = "#fff0d9";
+
+            context.beginPath();
+            context.ellipse(790, 525, 45, 35, 0, 0, Math.PI * 2);
+            context.ellipse(870, 525, 45, 35, 0, 0, Math.PI * 2);
+            context.fill();
+
+            // Hocico
+            context.beginPath();
+            context.moveTo(790, 535);
+            context.quadraticCurveTo(830, 575, 870, 535);
+            context.quadraticCurveTo(830, 610, 790, 535);
+            context.fill();
+
+            // Nariz
+            context.fillStyle = "#49313b";
+            context.beginPath();
+            context.arc(830, 535, 9, 0, Math.PI * 2);
+            context.fill();
+
+            // Ojos
+            context.fillStyle = "#382c35";
+            context.beginPath();
+            context.arc(795, 490, 9, 0, Math.PI * 2);
+            context.arc(865, 490, 9, 0, Math.PI * 2);
+            context.fill();
+
+            // Brillos de ojos
+            context.fillStyle = "white";
+            context.beginPath();
+            context.arc(798, 487, 3, 0, Math.PI * 2);
+            context.arc(868, 487, 3, 0, Math.PI * 2);
+            context.fill();
+
+            // Sonrisa
+            context.strokeStyle = "#49313b";
+            context.lineWidth = 3;
+            context.beginPath();
+            context.moveTo(830, 544);
+            context.quadraticCurveTo(830, 565, 812, 561);
+            context.moveTo(830, 565);
+            context.quadraticCurveTo(848, 565, 848, 550);
+            context.stroke();
+
+            // Cuello y pañuelo
+            context.fillStyle = "#633d8b";
+            context.beginPath();
+            context.moveTo(780, 575);
+            context.lineTo(880, 575);
+            context.lineTo(830, 625);
+            context.closePath();
+            context.fill();
+
+            context.fillStyle = "#f7c95b";
+            context.beginPath();
+            context.moveTo(830, 585);
+            context.lineTo(843, 595);
+            context.lineTo(830, 606);
+            context.lineTo(817, 595);
+            context.closePath();
+            context.fill();
+
+            context.restore();
+
+            etiqueta("ZORRITO", 830, 660);
+
+            // Texto inferior
+            context.fillStyle = "#765a8f";
+            context.font = "16px Arial";
+            context.textAlign = "center";
+            context.fillText("Figuras creadas con métodos del Canvas API", 500, 745);
+
+        };
+    </script>
+
+</body>
+</html>
