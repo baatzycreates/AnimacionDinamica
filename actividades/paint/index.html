@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Paint</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            background: #211832;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+        }
+
+        h1 {
+            color: #d8b5ff;
+            font-size: 38px;
+            letter-spacing: 4px;
+        }
+
+        .subtitulo {
+            color: #c9b8dc;
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            background: #342449;
+            border-radius: 18px;
+        }
+
+        .seccion {
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #e2caff;
+            margin-bottom: 12px;
+        }
+
+        .colores, .grosores {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .color {
+            width: 45px;
+            height: 45px;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .color:hover {
+            transform: scale(1.15);
+        }
+
+        .color.seleccionado {
+            outline: 3px solid #d8b5ff;
+            outline-offset: 4px;
+        }
+
+        .grosor {
+            padding: 12px 25px;
+            background: #76539b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .grosor:hover {
+            background: #a477d0;
+        }
+
+        .grosor.seleccionado {
+            background: #d39aff;
+            color: #29183c;
+            font-weight: bold;
+        }
+
+        #clearCanvas {
+            padding: 13px 35px;
+            background: #d65d83;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #clearCanvas:hover {
+            background: #f07ca0;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            margin: 20px auto 0;
+            background: white;
+            border: 5px solid #d8b5ff;
+            border-radius: 10px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .instruccion {
+            color: #d4c3e8;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>MY PAINT ✦</h1>
+    <p class="subtitulo">¡Deja volar tu creatividad!</p>
+
+    <div class="panel">
+
+        <div class="seccion">
+            <h3>ELIGE TU COLOR</h3>
+
+            <div class="colores">
+                <button class="color seleccionado" style="background:#000000"
+                    data-color="#000000" aria-label="Negro"></button>
+
+                <button class="color" style="background:#ff4f79"
+                    data-color="#ff4f79" aria-label="Rosa"></button>
+
+                <button class="color" style="background:#ff9f43"
+                    data-color="#ff9f43" aria-label="Naranja"></button>
+
+                <button class="color" style="background:#ffd93d"
+                    data-color="#ffd93d" aria-label="Amarillo"></button>
+
+                <button class="color" style="background:#55c98b"
+                    data-color="#55c98b" aria-label="Verde"></button>
+
+                <button class="color" style="background:#45b8e8"
+                    data-color="#45b8e8" aria-label="Azul"></button>
+
+                <button class="color" style="background:#8e63d9"
+                    data-color="#8e63d9" aria-label="Morado"></button>
+
+                <button class="color" style="background:#ffffff"
+                    data-color="#ffffff" aria-label="Blanco"></button>
+            </div>
+        </div>
+
+        <div class="seccion">
+            <h3>GROSOR DE LA PLUMA</h3>
+
+            <div class="grosores">
+                <button class="grosor seleccionado" data-size="3">
+                    Delgado
+                </button>
+
+                <button class="grosor" data-size="8">
+                    Mediano
+                </button>
+
+                <button class="grosor" data-size="18">
+                    Grueso
+                </button>
+            </div>
+        </div>
+
+        <button id="clearCanvas">BORRAR TODO ✕</button>
+
+        <canvas id="canvas" width="1000" height="600"></canvas>
+
+        <p class="instruccion">
+            Haz clic y arrastra para dibujar. ¡Diviértete!
+        </p>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+
+        let colorActual = "#000000";
+        let grosorActual = 3;
+        let dibujando = false;
+
+        context.lineCap = "round";
+        context.lineJoin = "round";
+
+        // Seleccionar colores
+        const botonesColor = document.querySelectorAll(".color");
+
+        botonesColor.forEach(boton => {
+            boton.addEventListener("click", function() {
+
+                colorActual = this.dataset.color;
+
+                botonesColor.forEach(b => {
+                    b.classList.remove("seleccionado");
+                });
+
+                this.classList.add("seleccionado");
+            });
+        });
+
+        // Seleccionar grosor
+        const botonesGrosor = document.querySelectorAll(".grosor");
+
+        botonesGrosor.forEach(boton => {
+            boton.addEventListener("click", function() {
+
+                grosorActual = Number(this.dataset.size);
+
+                botonesGrosor.forEach(b => {
+                    b.classList.remove("seleccionado");
+                });
+
+                this.classList.add("seleccionado");
+            });
+        });
+
+        // Obtener posición del puntero
+        function obtenerPosicion(event) {
+            const rect = canvas.getBoundingClientRect();
+
+            return {
+                x: (event.clientX - rect.left) * canvas.width / rect.width,
+                y: (event.clientY - rect.top) * canvas.height / rect.height
+            };
+        }
+
+        // Comenzar a dibujar
+        canvas.addEventListener("pointerdown", function(event) {
+
+            dibujando = true;
+            canvas.setPointerCapture(event.pointerId);
+
+            const posicion = obtenerPosicion(event);
+
+            context.beginPath();
+            context.moveTo(posicion.x, posicion.y);
+        });
+
+        // Dibujar mientras se mueve el puntero
+        canvas.addEventListener("pointermove", function(event) {
+
+            if (!dibujando) return;
+
+            const posicion = obtenerPosicion(event);
+
+            context.strokeStyle = colorActual;
+            context.lineWidth = grosorActual;
+
+            context.lineTo(posicion.x, posicion.y);
+            context.stroke();
+        });
+
+        // Terminar el trazo
+        function terminarDibujo() {
+            dibujando = false;
+            context.beginPath();
+        }
+
+        canvas.addEventListener("pointerup", terminarDibujo);
+        canvas.addEventListener("pointercancel", terminarDibujo);
+        canvas.addEventListener("lostpointercapture", terminarDibujo);
+
+        // Borrar todo el canvas
+        document.getElementById("clearCanvas")
+            .addEventListener("click", function() {
+
+                context.clearRect(
+                    0, 0, canvas.width, canvas.height
+                );
+            });
+
+    </script>
+
+</body>
+</html>
