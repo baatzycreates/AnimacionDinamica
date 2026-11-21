@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nave Espacial</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #080b20;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 25px;
+        }
+
+        h1 {
+            color: #a99bff;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #c8c5e8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 850px;
+            border: 2px solid #7668ce;
+            border-radius: 12px;
+            box-shadow: 0 0 25px #7668ce55;
+        }
+
+        .instrucciones {
+            margin-top: 15px;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🚀 Cosmic Explorer</h1>
+    <p>¡Explora el espacio y controla tu propia nave!</p>
+
+    <canvas id="lienzo" width="850" height="550"></canvas>
+
+    <div class="instrucciones">
+        ↑ o W: Acelerar |
+        ← o A: Girar a la izquierda |
+        → o D: Girar a la derecha
+        <br>
+        Suelta las teclas para observar cómo actúa la fricción.
+    </div>
+
+    <script>
+        const canvas = document.getElementById("lienzo");
+        const context = canvas.getContext("2d");
+
+        const ancho = canvas.width;
+        const alto = canvas.height;
+
+        // Nave espacial
+        function Nave() {
+            this.x = ancho / 2;
+            this.y = alto / 2;
+            this.rotation = 0;
+
+            this.vx = 0;
+            this.vy = 0;
+
+            this.aceleracion = 0.12;
+            this.friccion = 0.985;
+            this.velocidadMaxima = 5;
+
+            this.showFlame = false;
+        }
+
+        Nave.prototype.draw = function(context) {
+            context.save();
+
+            context.translate(this.x, this.y);
+            context.rotate(this.rotation);
+
+            // Llamarada de la nave
+            if (this.showFlame) {
+                context.fillStyle = "#ff7b32";
+                context.beginPath();
+                context.moveTo(-18, -7);
+                context.lineTo(-38 - Math.random() * 12, 0);
+                context.lineTo(-18, 7);
+                context.closePath();
+                context.fill();
+
+                context.fillStyle = "#ffe66d";
+                context.beginPath();
+                context.moveTo(-18, -4);
+                context.lineTo(-30 - Math.random() * 8, 0);
+                context.lineTo(-18, 4);
+                context.closePath();
+                context.fill();
+            }
+
+            // Alas
+            context.fillStyle = "#7668ce";
+            context.beginPath();
+            context.moveTo(-12, 0);
+            context.lineTo(-25, -28);
+            context.lineTo(8, -13);
+            context.closePath();
+            context.fill();
+
+            context.beginPath();
+            context.moveTo(-12, 0);
+            context.lineTo(-25, 28);
+            context.lineTo(8, 13);
+            context.closePath();
+            context.fill();
+
+            // Cuerpo principal
+            context.fillStyle = "#d9e5ff";
+            context.beginPath();
+            context.moveTo(27, 0);
+            context.lineTo(-16, -11);
+            context.lineTo(-11, 0);
+            context.lineTo(-16, 11);
+            context.closePath();
+            context.fill();
+
+            // Cabina
+            context.fillStyle = "#55d9ff";
+            context.beginPath();
+            context.ellipse(7, 0, 10, 5, 0, 0, Math.PI * 2);
+            context.fill();
+
+            // Detalles
+            context.strokeStyle = "#ffffff";
+            context.lineWidth = 2;
+            context.stroke();
+
+            context.restore();
+        };
+
+        // Fondo espacial
+        const estrellas = [];
+
+        for (let i = 0; i < 100; i++) {
+            estrellas.push({
+                x: Math.random() * ancho,
+                y: Math.random() * alto,
+                size: Math.random() * 2 + 1
+            });
+        }
+
+        function dibujarFondo() {
+            const fondo = context.createLinearGradient(0, 0, ancho, alto);
+            fondo.addColorStop(0, "#101432");
+            fondo.addColorStop(1, "#241544");
+
+            context.fillStyle = fondo;
+            context.fillRect(0, 0, ancho, alto);
+
+            estrellas.forEach(function(estrella) {
+                context.fillStyle = "white";
+                context.globalAlpha = Math.random() * 0.5 + 0.5;
+
+                context.beginPath();
+                context.arc(
+                    estrella.x,
+                    estrella.y,
+                    estrella.size,
+                    0,
+                    Math.PI * 2
+                );
+                context.fill();
+            });
+
+            context.globalAlpha = 1;
+        }
+
+        const nave = new Nave();
+        const teclas = {};
+
+        // Detectar teclas presionadas
+        document.addEventListener("keydown", function(event) {
+            teclas[event.key.toLowerCase()] = true;
+
+            if (["arrowup", "arrowleft", "arrowright", " "].includes(event.key.toLowerCase())) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener("keyup", function(event) {
+            teclas[event.key.toLowerCase()] = false;
+        });
+
+        // Actualizar movimiento
+        function actualizar() {
+
+            // Rotación
+            if (teclas["arrowleft"] || teclas["a"]) {
+                nave.rotation -= 0.06;
+            }
+
+            if (teclas["arrowright"] || teclas["d"]) {
+                nave.rotation += 0.06;
+            }
+
+            // Aceleración
+            nave.showFlame = false;
+
+            if (teclas["arrowup"] || teclas["w"]) {
+                nave.vx += Math.cos(nave.rotation) * nave.aceleracion;
+                nave.vy += Math.sin(nave.rotation) * nave.aceleracion;
+                nave.showFlame = true;
+            }
+
+            // Limitar velocidad
+            const velocidad = Math.sqrt(
+                nave.vx * nave.vx + nave.vy * nave.vy
+            );
+
+            if (velocidad > nave.velocidadMaxima) {
+                nave.vx = (nave.vx / velocidad) * nave.velocidadMaxima;
+                nave.vy = (nave.vy / velocidad) * nave.velocidadMaxima;
+            }
+
+            // Fricción
+            nave.vx *= nave.friccion;
+            nave.vy *= nave.friccion;
+
+            // Movimiento
+            nave.x += nave.vx;
+            nave.y += nave.vy;
+
+            // Límites de pantalla
+            const margen = 30;
+
+            if (nave.x < margen) {
+                nave.x = margen;
+                nave.vx = 0;
+            }
+
+            if (nave.x > ancho - margen) {
+                nave.x = ancho - margen;
+                nave.vx = 0;
+            }
+
+            if (nave.y < margen) {
+                nave.y = margen;
+                nave.vy = 0;
+            }
+
+            if (nave.y > alto - margen) {
+                nave.y = alto - margen;
+                nave.vy = 0;
+            }
+        }
+
+        // Animación
+        function animar() {
+            dibujarFondo();
+            actualizar();
+            nave.draw(context);
+
+            requestAnimationFrame(animar);
+        }
+
+        animar();
+
+    </script>
+
+</body>
+</html>
